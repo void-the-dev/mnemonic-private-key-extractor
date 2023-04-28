@@ -2,6 +2,8 @@
 
 If you are stuck with an sparrow wallet that had a 24-word seed phrase or a passphrase and cannot migrate to an ordinal-supported wallet, this is for you.
 
+You can also use this to share access to only one account of your wallet.
+
 ## How to use
 
 You can use the public website [here](https://mnemonic-private-key-extractor.vercel.app/)
