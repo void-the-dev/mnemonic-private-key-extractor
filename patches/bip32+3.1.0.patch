@@ -1,0 +1,19 @@
+diff --git a/node_modules/bip32/src/bip32.js b/node_modules/bip32/src/bip32.js
+index 66fd69a..3b5e78a 100644
+--- a/node_modules/bip32/src/bip32.js
++++ b/node_modules/bip32/src/bip32.js
+@@ -1,12 +1,11 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const crypto = require("./crypto");
+-const testecc_1 = require("./testecc");
+ const bs58check = require('bs58check');
+ const typeforce = require('typeforce');
+ const wif = require('wif');
+-function BIP32Factory(ecc) {
+-    testecc_1.testEcc(ecc);
++async function BIP32Factory(ecc) {
++    ecc = await ecc;
+     const UINT256_TYPE = typeforce.BufferN(32);
+     const NETWORK_TYPE = typeforce.compile({
+         wif: typeforce.UInt8,
