@@ -1,7 +1,7 @@
 const BIP86 = require("bip86");
 
-export const getRootAccount = (mnemonic: string) =>
-  new BIP86.fromMnemonic(mnemonic);
+export const getRootAccount = (mnemonic: string, passphrase: string) =>
+  new BIP86.fromMnemonic(mnemonic, passphrase);
 
 export const getAccount = (root: any, index: number) =>
   new BIP86.fromXPrv(root.deriveAccount(index));

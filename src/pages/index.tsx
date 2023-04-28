@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 
 export default function Home() {
   const [mnemonic, setMnemonic] = useState("");
+  const [passphrase, setPassphrase] = useState("");
   const [startIndex, setStartIndex] = useState(0);
   const [addressNumber, setAddressNumber] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ export default function Home() {
     // Delay to show loading
     setTimeout(() => {
       try {
-        const root = getRootAccount(mnemonic);
+        const root = getRootAccount(mnemonic, passphrase);
         const account = getAccount(root, 0);
         const allPrivateKeys = [];
         for (let i = startIndex; i < startIndex + addressNumber; i++) {
@@ -38,7 +39,7 @@ export default function Home() {
         setLoading(false);
       }
     }, 500);
-  }, [mnemonic, startIndex, addressNumber]);
+  }, [mnemonic, startIndex, addressNumber, passphrase]);
 
   return (
     <main className={`p-24`}>
@@ -61,6 +62,22 @@ export default function Home() {
             placeholder="void bandit void rose"
             onChange={(e) => setMnemonic(e.target.value)}
             value={mnemonic}
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="mnemonic"
+          >
+            Passphrase (optional)
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="passphrase"
+            type="password"
+            placeholder="passphrase when creating the wallet"
+            onChange={(e) => setPassphrase(e.target.value)}
+            value={passphrase}
           />
         </div>
         <div className="mb-4">
