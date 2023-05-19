@@ -6,8 +6,8 @@ export const getRootAccount = (mnemonic: string, passphrase: string) =>
 export const getAccount = (root: any, index: number) =>
   new BIP86.fromXPrv(root.deriveAccount(index));
 
-export const getAddress = (account: any, index: number) =>
-  account.getAddress(index);
+export const getAddress = (account: any, index: number, change: boolean) =>
+  account.getAddress(index, change);
 
-export const getPrivateKey = (account: any, index: number) =>
-  account.getPrivateKey(index, false);
+export const getPrivateKey = (account: any, index: number, change: boolean) =>
+  account.getPrivateKey(index, change);

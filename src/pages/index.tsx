@@ -1,10 +1,11 @@
+import KeyTable from "@/components/KeyTable";
+import { Key } from "@/types";
 import {
   getAccount,
   getAddress,
   getPrivateKey,
   getRootAccount,
 } from "@/utils/address";
-import { copyTextToClipboard } from "@/utils/javascript";
 import { useCallback, useState } from "react";
 
 export default function Home() {
@@ -13,9 +14,8 @@ export default function Home() {
   const [startIndex, setStartIndex] = useState(0);
   const [addressNumber, setAddressNumber] = useState(10);
   const [loading, setLoading] = useState(false);
-  const [privateKeys, setPrivateKeys] = useState<
-    { address: string; key: string }[]
-  >([]);
+  const [changeKeys, setChangeKeys] = useState<Key[]>([]);
+  const [privateKeys, setPrivateKeys] = useState<Key[]>([]);
 
   const submit = useCallback(() => {
     setLoading(true);
@@ -27,12 +27,19 @@ export default function Home() {
         const root = getRootAccount(mnemonic, passphrase);
         const account = getAccount(root, 0);
         const allPrivateKeys = [];
+        const allChangeKeys = [];
         for (let i = startIndex; i < startIndex + addressNumber; i++) {
-          const privateKey = getPrivateKey(account, i);
-          const address = getAddress(account, i);
-          allPrivateKeys.push({ address: address, key: privateKey });
+          allPrivateKeys.push({
+            address: getAddress(account, i, false),
+            key: getPrivateKey(account, i, false),
+          });
+          allChangeKeys.push({
+            address: getAddress(account, i, true),
+            key: getPrivateKey(account, i, true),
+          });
         }
         setPrivateKeys(allPrivateKeys);
+        setChangeKeys(allChangeKeys);
       } catch (e) {
         console.error(e);
       } finally {
@@ -138,54 +145,8 @@ export default function Home() {
         </span>
       </form>
 
-      {privateKeys.length > 0 && (
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Index
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Address
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Private Key
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {privateKeys.map((privateKey, index) => (
-                <tr
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {index}
-                  </th>
-                  <td className="px-6 py-4">{privateKey.address}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className="cursor-pointer text-3xl"
-                      onClick={() => {
-                        copyTextToClipboard(privateKey.key);
-                        alert("Copied the private key!");
-                      }}
-                    >
-                      &#x2398;
-                    </span>
-                    &nbsp;&nbsp;
-                    {privateKey.key}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <KeyTable keys={privateKeys} title="Receiving addresses" />
+      <KeyTable keys={changeKeys} title="Change addresses" />
     </main>
   );
 }
